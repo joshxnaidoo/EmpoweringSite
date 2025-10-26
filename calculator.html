@@ -1,0 +1,121 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Empowering the Nation - Calculate Fees</title>
+  <style>
+    body{font-family:'Arial',sans-serif;margin:0;padding:0;background:#ffffff;color:#333}
+    header{text-align:center;padding:40px 20px 10px}
+    header h1{font-size:2em;margin:0;font-weight:700}
+    header p{color:#555;margin:5px 0 20px}
+    nav{text-align:center;margin-bottom:30px}
+    nav a{text-decoration:none;color:#000;margin:0 15px;font-weight:500}
+    nav a:hover{text-decoration:underline}
+    main{max-width:900px;margin:auto;padding:20px}
+    h2{font-size:1.5em;margin-top:40px;border-bottom:2px solid #eee;padding-bottom:8px}
+    p{line-height:1.6}
+    form label{display:block;margin:10px 0 6px;font-weight:bold}
+    input[type="text"],input[type="email"],input[type="tel"]{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px}
+    .checks{display:grid;gap:8px;margin:12px 0}
+    .checks label{display:flex;align-items:center;gap:8px;border:1px solid #ddd;border-radius:8px;padding:8px 10px;background:#fff}
+    button{background:#007bff;color:#fff;border:none;padding:10px 15px;border-radius:5px;cursor:pointer;font-size:.9em}
+    button:hover{background:#0056b3}
+    .card{border:1px solid #ddd;border-radius:10px;padding:15px;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.05);margin-top:16px}
+    footer{background:#f5f5f5;text-align:center;padding:20px;font-size:.9em;margin-top:40px}
+    footer a{color:#000;text-decoration:none;margin:0 5px}
+    @media (max-width:600px){header h1{font-size:1.6em} nav a{display:inline-block;margin:8px}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Empowering the Nation</h1>
+    <p>Skills today, opportunities tomorrow</p>
+  </header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="six_month.html">Six-month Courses</a>
+    <a href="six_week.html">Short Courses</a>
+    <a href="calculator.html">Calculate Fees</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <main>
+    <section>
+      <h2>Calculate Your Course Fees</h2>
+      <p>Choose the courses you’re interested in, fill in your details, and click calculate. Discounts apply for 2 or more courses. VAT (15%) will be added at the end.</p>
+
+      <form id="calcForm" class="card">
+        <label>Full Name
+          <input id="name" type="text" placeholder="Your name" required />
+        </label>
+        <label>Phone
+          <input id="phone" type="tel" placeholder="071 234 5678" required />
+        </label>
+        <label>Email
+          <input id="email" type="email" placeholder="you@example.com" required />
+        </label>
+
+        <h3>Courses</h3>
+        <div class="checks">
+          <label><input type="checkbox" value="First Aid" /> First Aid — R1500</label>
+          <label><input type="checkbox" value="Sewing" /> Sewing — R1500</label>
+          <label><input type="checkbox" value="Landscaping" /> Landscaping — R1500</label>
+          <label><input type="checkbox" value="Life Skills" /> Life Skills — R1500</label>
+          <label><input type="checkbox" value="Child Minding" /> Child Minding — R750</label>
+          <label><input type="checkbox" value="Cooking" /> Cooking — R750</label>
+          <label><input type="checkbox" value="Garden Maintenance" /> Garden Maintenance — R750</label>
+        </div>
+
+        <button type="submit">Calculate</button>
+      </form>
+
+      <div id="result"></div>
+    </section>
+  </main>
+  <footer>
+    Empowering the Nation • Johannesburg • <a href="contact.html">Contact</a>
+  </footer>
+
+  <script>
+    document.getElementById('calcForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const boxes = document.querySelectorAll('.checks input[type=checkbox]:checked');
+
+      if(!name || !phone || !email){ alert('Please fill in all your contact details.'); return; }
+      if(boxes.length === 0){ alert('Please select at least one course.'); return; }
+
+      const fees = {
+        "First Aid":1500, "Sewing":1500, "Landscaping":1500, "Life Skills":1500,
+        "Child Minding":750, "Cooking":750, "Garden Maintenance":750
+      };
+
+      let subtotal = 0, chosen = [];
+      boxes.forEach(b => { subtotal += fees[b.value]; chosen.push(b.value); });
+
+      let rate = 0;
+      if(chosen.length === 2) rate = 0.05;
+      else if(chosen.length === 3) rate = 0.10;
+      else if(chosen.length > 3) rate = 0.15;
+
+      const discount = subtotal * rate;
+      const after = subtotal - discount;
+      const vat = after * 0.15;
+      const total = after + vat;
+
+      document.getElementById('result').innerHTML = `
+        <div class="card">
+          <h3>Quote for ${name}</h3>
+          <p><strong>Courses:</strong> ${chosen.join(', ')}</p>
+          <p>Subtotal: R${subtotal.toFixed(2)}</p>
+          <p>Discount (${(rate*100)}%): -R${discount.toFixed(2)}</p>
+          <p>After Discount: R${after.toFixed(2)}</p>
+          <p>VAT (15%): R${vat.toFixed(2)}</p>
+          <h3>Total: R${total.toFixed(2)}</h3>
+          <p style="font-size:13px;color:#555;">A consultant will contact you soon. This is a quotation, not a final invoice.</p>
+        </div>`;
+    });
+  </script>
+</body>
+</html>
